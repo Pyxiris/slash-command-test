@@ -1,0 +1,11 @@
+name: Run pre-commit checks
+permissions: {}
+on:
+  pull_request:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate pre-commit checks
+        run: echo "Running pre-commit checks..."
