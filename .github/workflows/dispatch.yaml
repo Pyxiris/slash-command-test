@@ -1,0 +1,44 @@
+name: Slash Command Dispatch
+permissions: {}
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  slashCommandDispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.PYXIRIS_APP_ID }}
+          private-key: ${{ secrets.PYXIRIS_APP_SECRET }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Slash Command Dispatch
+        uses: peter-evans/slash-command-dispatch@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          reactions: false
+          config: >
+            [
+              {
+                "command": "help",
+                "permission": "maintain",
+                "repository": "Pyxiris/slash-command-processor",
+                "issue_type": "both"
+              },
+              {
+                "command": "helpr",
+                "permission": "maintain",
+                "repository": "Pyxiris/slash-command-processor",
+                "issue_type": "both"
+              },
+              {
+                "command": "build-push",
+                "permission": "maintain",
+                "issue_type": "pull-request"
+              }
+            ]
