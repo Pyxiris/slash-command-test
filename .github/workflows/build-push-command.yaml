@@ -1,0 +1,27 @@
+name: help-command
+on:
+  repository_dispatch:
+    types: [build-push-command]
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Generate token
+      #   id: generate_token
+      #   uses: actions/create-github-app-token@v2
+      #   with:
+      #     app-id: ${{ vars.PYXIRIS_APP_ID }}
+      #     private-key: ${{ secrets.PYXIRIS_APP_SECRET }}
+      #     permission-contents: write
+      #     permission-issues: write
+      #     # permission-pull-requests: write
+      
+
+      - name: Start Build
+        uses: ./.github/workflows/build-and-push.yaml
+        permission:
+          contents: read
+          packages: write
+          issues: write
+        secrets: inherit
+
