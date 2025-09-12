@@ -1,0 +1,1 @@
+FROM ghcr.io/tecnativa/docker-duplicity-docker-s3:latest
