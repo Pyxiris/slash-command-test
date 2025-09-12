@@ -1,0 +1,32 @@
+name: help-command
+on:
+  repository_dispatch:
+    types: [help-command]
+jobs:
+  help:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.PYXIRIS_APP_ID }}
+          private-key: ${{ secrets.PYXIRIS_APP_SECRET }}
+          permission-contents: write
+          permission-issues: write
+          # permission-pull-requests: write
+      # - name: Add reaction
+      #   uses: peter-evans/create-or-update-comment@v4
+      #   with:
+      #     comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+      #     reactions: hooray
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            Hello
