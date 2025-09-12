@@ -1,0 +1,40 @@
+name: help-command
+on:
+  repository_dispatch:
+    types: [help-auth]
+jobs:
+  help:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: write
+      pull-requests: write
+    steps:
+      # - name: Generate token
+      #   id: generate_token
+      #   uses: actions/create-github-app-token@v2
+      #   with:
+      #     app-id: ${{ vars.PYXIRIS_APP_ID }}
+      #     private-key: ${{ secrets.PYXIRIS_APP_SECRET }}
+      #     permission-contents: write
+      #     permission-issues: write
+      #     # permission-pull-requests: write
+      # - name: Add reaction
+      #   uses: peter-evans/create-or-update-comment@v4
+      #   with:
+      #     comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+      #     reactions: hooray
+      - name: Log Values
+        run: |
+          echo "Issue number is ${{ github.event.client_payload.github.payload.issue.number }}"
+          echo "Repository is ${{ github.event.client_payload.github.payload.repository.full_name }}"
+          echo "payload is ${{ github.event.client_payload }}"
+          echo "github.event.client_payload.test.github.payload.repository.full_name is ${{ github.event.client_payload.test.github.payload.repository.full_name }}"
+          "
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+          body: |
+            Hello
