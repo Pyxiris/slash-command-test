@@ -26,9 +26,14 @@ jobs:
             [
               {
                 "command": "help",
+                "dispatch_type": "workflow",
                 "permission": "maintain",
-                "repository": "Pyxiris/slash-command-processor",
-                "issue_type": "both"
+                "issue_type": "both",
+                "static_args": [
+                  "repository=${{ github.repository }}",
+                  "issue_number=${{ github.event.issue.number }}",
+                  "comment_id=${{ github.event.comment.id }}"
+                ]
               },
               {
                 "command": "helpr",
