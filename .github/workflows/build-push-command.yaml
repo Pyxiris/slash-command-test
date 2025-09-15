@@ -1,7 +1,6 @@
 name: Build and Push
 permissions: {}
 on:
-  pull_request:
   repository_dispatch:
     types: [build-push-command]
 jobs:

@@ -1,0 +1,65 @@
+name: help-command
+permissions: {}
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'The repository the command was dispatched from'
+        required: true
+      issue_number:
+        description: 'The issue or PR number'
+        required: true
+      comment_id:
+        description: 'The ID of the comment that triggered the dispatch'
+        required: true
+      ref:
+        description: 'The git ref that the command was dispatched from'
+        required: false
+jobs:
+  help-command:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    if: |
+      github.event_name != 'pull_request'
+      
+    steps:
+      # - name: Generate token
+      #   id: generate_token
+      #   uses: actions/create-github-app-token@v2
+      #   with:
+      #     app-id: ${{ vars.PYXIRIS_APP_ID }}
+      #     private-key: ${{ secrets.PYXIRIS_APP_SECRET }}
+      #     permission-issues: write
+      #     permission-pull-requests: write
+
+      - name: Log Values
+        run: |
+          echo "Issue number is ${{ github.event.issue_number }}"
+          echo "Issue number from event is ${{ github.event.issue_number }}"
+          echo "Repository is ${{ github.repository }}"
+          echo "Repository from event is ${{ github.event.inputs.repository }}"
+          echo "Comment id is ${{ github.event.comment.id }}"
+          echo "Comment id from event is ${{ github.event.inputs.comment_id }}"
+          echo "Ref is ${{ github.ref }}"
+          echo "Ref from event is ${{ github.event.inputs.ref }}"
+
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          repository: ${{ github.event.inputs.repository }}
+          comment-id: ${{ github.event.inputs.comment_id }}
+          edit-mode: append
+          append-separator: newline
+          # token: ${{ steps.generate_token.outputs.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            Hello! This is the help command, running from a `workflow_dispatch`.
+            I received the following inputs:
+            - Repository: `${{ github.event.inputs.repository }}`
+            - Issue/PR: `${{ github.event.inputs.issue_number }}`
+            - Comment ID: `${{ github.event.inputs.comment_id }}`
